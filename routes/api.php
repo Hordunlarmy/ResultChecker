@@ -3,6 +3,8 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\AdminController;
 
 Route::get('/', function () {
     return response()->json(['message' => 'Hello, I\'m API!!!']);
@@ -16,6 +18,18 @@ Route::group([
     Route::post('logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
 });
 
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
+Route::group([
+    'prefix' => 'admin',
+    'middleware' => 'auth:sanctum', 'admin',
+], function () {
+    Route::get('users', [AdminController::class, 'getUsers']);
+    Route::get('scratch-cards', [AdminController::class, 'index']);
+    Route::post('generate', [AdminController::class, 'generate']);
+});
+
+Route::group([
+    'prefix' => 'user',
+    'middleware' => 'auth:sanctum',
+], function () {
+    Route::get('check-result', [UserController::class, 'checkResult']);
+});

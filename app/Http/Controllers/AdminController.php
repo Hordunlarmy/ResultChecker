@@ -3,18 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Models\ScratchCard;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
 class AdminController extends Controller
 {
-    public function generate(Request $request, $count = 1)
+    public function generate(Request $request)
     {
         $this->validate($request, [
             'count' => 'required|integer|min:1|max:1000',
         ]);
 
-        $count = $request->route('count') ?? 1;
+        $count = $request->query('count') ?? 1;
 
         $scratchCards = [];
         for ($i = 0; $i < $count; $i++) {
@@ -55,6 +56,15 @@ class AdminController extends Controller
 
         return response()->json([
             'scratch_cards' => $pins,
+        ]);
+    }
+
+    public function getUsers(Request $request)
+    {
+        $users = User::all();
+
+        return response()->json([
+            'users' => $users,
         ]);
     }
 }
