@@ -66,6 +66,7 @@ These routes are protected and require authentication via Sanctum and the "admin
             "amount": 100
         }
         ```
+    -   admin test account => email: admin@xfinders@gmail.com, password: password
 
 -   **GET `/admin/account-types`**
 
@@ -89,6 +90,7 @@ These routes are protected and require authentication via Sanctum.
     -   Allows a user to check their results.
     -   **Response:**
         -   User's result (if available)
+    -   user test account => email: user@xfinders.com password: password
 
 **Authentication**
 
