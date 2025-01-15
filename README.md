@@ -122,7 +122,7 @@ After the Docker image has been built successfully, you can verify the applicati
 To generate scratch cards, you can use the following command:
 
 ```bash
-docker exec -it resultchecker php artisan generate:scratch-cards 10
+docker exec -it resultchecker php artisan scratchcards:generate 10
 # Generates 10 scratch cards
 ```
 
