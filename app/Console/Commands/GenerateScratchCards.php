@@ -14,7 +14,7 @@ class GenerateScratchCards extends Command
     // The console command description
     protected $description = 'Generate scratch cards and return their PINs';
 
-    public function __construct()
+public function __construct()
     {
         parent::__construct();
     }

@@ -11,6 +11,8 @@ services:
       - ./storage/logs:/resultchecker/storage/logs
     env_file:
       - .env
+    environment:
+      - PORT=8000
     restart: always
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/api"]
