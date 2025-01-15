@@ -1,66 +1,137 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Result Checker API
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Result Checker is a RESTful API that allows users to check their results, manage user accounts, and for administrators to manage scratch cards and user accounts.
 
-## About Laravel
+## Routes
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+### 1. Public Routes
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+-   **GET `/`**
+    -   Returns a simple greeting message.
+    -   **Response:**
+        ```json
+        {
+            "message": "Hello, I'm API!!!"
+        }
+        ```
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### 2. Auth Routes (Authentication)
 
-## Learning Laravel
+-   **POST `/auth/register`**
+    -   Registers a new user.
+    -   **Request Body:**
+        ```json
+        {
+            "email": "[email address removed]",
+            "password": "password123",
+            "name": "John Doe"
+        }
+        ```
+-   **POST `/auth/login`**
+    -   Logs in a user and returns an authentication token.
+    -   **Request Body:**
+        ```json
+        {
+            "email": "[email address removed]",
+            "password": "password123"
+        }
+        ```
+-   **POST `/auth/logout`**
+    -   Logs out a user. Requires authentication via Sanctum.
+    -   **Headers:**
+        ```
+        Authorization: Bearer <auth_token>
+        ```
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### 3. Admin Routes
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+These routes are protected and require authentication via Sanctum and the "admin" role.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+-   **GET `/admin/users`**
 
-## Laravel Sponsors
+    -   Fetches a list of all users.
+    -   **Response:**
+        -   List of users
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+-   **GET `/admin/scratch-cards`**
 
-### Premium Partners
+    -   Lists all the scratch cards available.
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+-   **POST `/admin/generate`**
 
-## Contributing
+    -   Generates a new scratch card.
+    -   **Request Body:**
+        ```json
+        {
+            "amount": 100
+        }
+        ```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+-   **GET `/admin/account-types`**
 
-## Code of Conduct
+    -   Fetches a list of account types.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+-   **POST `/admin/results`**
+    -   Allows admins to create results for users.
+    -   **Request Body:**
+        ```json
+        {
+            "user_id": 1,
+            "result": "Pass"
+        }
+        ```
 
-## Security Vulnerabilities
+### 4. User Routes
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+These routes are protected and require authentication via Sanctum.
 
-## License
+-   **GET `/user/check-result`**
+    -   Allows a user to check their results.
+    -   **Response:**
+        -   User's result (if available)
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+**Authentication**
+
+The API uses Sanctum for user authentication. Users must authenticate via login to access protected routes. Once logged in, the API will return an authentication token that must be included in the `Authorization` header as a `Bearer` token for any request to protected routes.
+
+## Docker Setup Guide
+
+### 1. Clone the Repository
+
+First, clone the repository to your local machine:
+
+```bash
+git clone https://github.com/Hordunlarmy/ResultChecker
+cd your-repository-folder
+```
+
+### 2. Build the Docker Image
+
+Once you're inside the project folder, build the Docker image:
+
+```bash
+docker compose up --build -d
+```
+
+### 3. Verify the Application
+
+After the Docker image has been built successfully, you can verify the application by visiting [http://localhost:8000](http://localhost:8000) in your browser.
+
+### 4. Generate Scratch Cards
+
+To generate scratch cards, you can use the following command:
+
+```bash
+docker exec -it resultchecker php artisan generate:scratch-cards 10
+# Generates 10 scratch cards
+```
+
+## API Documentation
+
+You can interact with the API using Postman. Here’s the link to the Postman collection for testing the available endpoints:
+
+[![Run in Postman](https://run.pstmn.io/button.svg)](https://documenter.getpostman.com/view/34544809/2sAYQZGBu9)
+
+Live URL => https://xfinders.hordun.software/api
+
+Feel free to import the collection and start testing the endpoints. The collection includes examples for common requests to help you get started.
