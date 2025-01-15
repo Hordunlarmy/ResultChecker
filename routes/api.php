@@ -1,6 +1,5 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
@@ -25,6 +24,8 @@ Route::group([
     Route::get('users', [AdminController::class, 'getUsers']);
     Route::get('scratch-cards', [AdminController::class, 'index']);
     Route::post('generate', [AdminController::class, 'generate']);
+    Route::get('account-types', [AdminController::class, 'getAccountTypes']);
+    Route::post('results', [AdminController::class, 'createResult']);
 });
 
 Route::group([

@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\ScratchCard;
 use App\Models\User;
+use App\Models\Result;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
 
 class AdminController extends Controller
 {
@@ -65,6 +67,39 @@ class AdminController extends Controller
 
         return response()->json([
             'users' => $users,
+        ]);
+    }
+
+    public function getAccountTypes()
+    {
+        $accountTypes = DB::table('account_types')->get();
+
+        return response()->json(
+            $accountTypes
+        );
+    }
+
+    // Method to create a result for a user
+    public function createResult(Request $request)
+    {
+        $this->validate($request, [
+            'user_id' => 'required|exists:users,id',
+            'subject' => 'required|string',
+            'score' => 'required|integer',
+            'total_marks' => 'required|integer',
+        ]);
+
+        // Create a new result for the specified user
+        $result = Result::create([
+            'user_id' => $request->input('user_id'),
+            'subject' => $request->input('subject'),
+            'score' => $request->input('score'),
+            'total_marks' => $request->input('total_marks'),
+        ]);
+
+        return response()->json([
+            'message' => 'Result created successfully.',
+            'result' => $result,
         ]);
     }
 }
