@@ -13,5 +13,7 @@ fi
 php artisan route:clear && php artisan config:clear && php artisan cache:clear && php artisan view:clear
 
 # Start Supervisor to manage background processes
-echo "Starting Supervisor..."
-exec /usr/bin/supervisord -c /etc/supervisor/supervisord.conf
+#echo "Starting Supervisor..."
+#exec /usr/bin/supervisord -c /etc/supervisor/supervisord.conf
+
+exec php artisan serve --host=0.0.0.0 --port="${PORT}"
